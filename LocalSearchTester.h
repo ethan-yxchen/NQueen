@@ -41,10 +41,10 @@ public:
         auto _ = mean_std(vec);
         double mu = _.first, std = _.second;
         
-        printf("%*s %.2f (%.2f %.2f%%)   ",
-            10, name.c_str(), mu, std, std/mu*100);
-        printf("1/N %.2f (%.2f)   ", mu/NQ, std/NQ);
-        printf("1/Nlog(N) %.2f (%.2f)\n", mu/NLog, std/NLog);
+        printf("%*s %*.2f (%*.2f %*.2f%%)   ",
+            10, name.c_str(), 12, mu, 10, std, 6, std/mu*100);
+        printf("1/N %*.2f (%*.2f)   ", 6, mu/NQ, 6, std/NQ);
+        printf("1/Nlog(N) %*.2f (%*.2f)\n", 6, mu/NLog, 6, std/NLog);
     }
     
     void stats() const {
