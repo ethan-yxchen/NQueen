@@ -6,6 +6,8 @@
 #include <cmath>
 #include <string>
 
+#include "Tester.h"
+
 using namespace std;
 
 
@@ -36,12 +38,8 @@ public:
     
     template <typename T>
     void stats(string name, vector<T> vec) const {
-        valarray<T> x(vec.data(), vec.size());
-        T s = x.sum();
-        double mu = double(s) / double(vec.size());
-        T q = (x * x).sum();
-        double std = double(q) / double(vec.size()) - mu * mu;
-        std = sqrt(std);
+        auto _ = mean_std(vec);
+        double mu = _.first, std = _.second;
         
         printf("%*s %.2f (%.2f %.2f%%)   ",
             10, name.c_str(), mu, std, std/mu*100);
