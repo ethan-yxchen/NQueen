@@ -58,11 +58,16 @@ public:
         int j = distribution(generator);
         while (i == j)
             j = distribution(generator);
-        int cost = diff(i, j);
+        
+        return swap_soft(i, j);
+    }
+    
+    bool swap_soft(int col1, int col2) {
+        int cost = diff(col1, col2);
         
         /**
          * soft margin: even if cost > 0, by a exponential probability,
-         * swap i, j
+         * swap col1, col2
          */
         if (cost > 0) {
             if(conflicts >= soft_threshold)
@@ -75,7 +80,7 @@ public:
             if (uniform_int_distribution<int>(0, prob_plateau)(generator))
                 return false;
         
-        swap_row(i, j);
+        swap_row(col1, col2);
         conflicts += cost;
         return true;
     }
