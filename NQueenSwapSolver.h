@@ -47,7 +47,6 @@ public:
     }
     
     bool random_step() {
-        //return random_step_basic();
         return random_step_soft();
     }
 
