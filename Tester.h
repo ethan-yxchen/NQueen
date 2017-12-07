@@ -9,7 +9,7 @@
 using namespace std;
 
 
-template <class Runner>
+template <class LocalSearchRunner>
 class Tester {
 
 public:
@@ -62,7 +62,7 @@ public:
     
     void test(bool verbose=false) {
         for (int i=0; i<repeat; ++i) {
-            Runner runner(NQ);
+            LocalSearchRunner runner(NQ);
             runner.solver.soft_threshold = soft_threshold;
             runner.solver.prob_plateau = prob_plateau;
             runner.run(verbose);

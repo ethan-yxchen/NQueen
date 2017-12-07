@@ -1,5 +1,5 @@
 #include "NQueenSwapSolver.h"
-#include "Runner.h"
+#include "LocalSearchRunner.h"
 #include "Tester.h"
 
 int main(int argc, const char *argv[]) {
@@ -9,7 +9,7 @@ int main(int argc, const char *argv[]) {
     int prob_plateau = (argc > 4)? stoi(string(argv[4])) : 3;
     int verbose = (argc > 5)? stoi(string(argv[5])) : 0;
 
-    Tester<Runner<NQueenSwapSolver>> tester(N, repeat, 
+    Tester<LocalSearchRunner<NQueenSwapSolver>> tester(N, repeat, 
             soft_threshold, prob_plateau);
     
     tester.test(verbose);

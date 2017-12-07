@@ -8,7 +8,7 @@ using namespace std;
 
 
 template <class Solver>
-class Runner {
+class LocalSearchRunner {
 
 public:
     Solver solver;
@@ -16,7 +16,7 @@ public:
     uint64_t steps, attempts;
     chrono::duration<double> elapse;
 
-    Runner(int NQ) : solver(NQ), NQ(NQ), steps(0), attempts(0) {}
+    LocalSearchRunner(int NQ) : solver(NQ), NQ(NQ), steps(0), attempts(0) {}
     
     void run(bool verbose=false) {
         auto start = chrono::system_clock::now();
