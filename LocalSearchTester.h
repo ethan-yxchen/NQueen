@@ -10,7 +10,7 @@ using namespace std;
 
 
 template <class LocalSearchRunner>
-class Tester {
+class LocalSearchTester {
 
 public:
     int NQ;
@@ -22,7 +22,7 @@ public:
     int soft_threshold;
     int prob_plateau;
 
-    Tester(int NQ, int repeat, int soft_threshold, int prob_plateau)
+    LocalSearchTester(int NQ, int repeat, int soft_threshold, int prob_plateau)
       : NQ(NQ), NLog(NQ * log(NQ)), repeat(repeat),
         soft_threshold(soft_threshold), prob_plateau(prob_plateau)
         {}
