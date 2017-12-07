@@ -26,7 +26,7 @@ public:
         if (verbose)
             printf("N=%d seed=%d\n", NQ, solver.seed);
         
-        uint64_t limit = NQ * 320;
+        uint64_t limit = NQ * 1000;
         for (; solver.conflicts && attempts < limit; attempts++) {
             if (solver.random_step())
                 steps++;
