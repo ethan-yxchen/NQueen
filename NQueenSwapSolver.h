@@ -84,7 +84,7 @@ public:
         return true;
     }
 
-    void calculate_conflict() {
+    virtual void calculate_conflict() {
         int sum = 0;
         conflicts_dirty = false;
 
@@ -119,7 +119,7 @@ public:
         return _;
     }
     
-    void swap_row(int col1, int col2) {
+    virtual void swap_row(int col1, int col2) {
         int Q1 = board[col1];
         int Q2 = board[col2];
         int rcol1 = NQ - col1;
