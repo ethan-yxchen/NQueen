@@ -22,9 +22,9 @@ public:
         auto start = chrono::system_clock::now();
         
         solver.init();
-        solver.calculate_conflict();
         if (verbose)
-            printf("N=%d seed=%d\n", NQ, solver.seed);
+            printf("N=%d seed=%d\n", NQ, solver.seed), print_board();
+        solver.calculate_conflict();
         
         uint64_t limit = NQ * 1000;
         for (; solver.conflicts && attempts < limit; attempts++) {
@@ -32,8 +32,7 @@ public:
                 steps++;
         }
         if (verbose)
-            if (solver.conflicts == 0)
-                print_board();
+            print_board();
         
         auto end = chrono::system_clock::now();
         elapse = end-start;
@@ -65,6 +64,7 @@ public:
     
     void print_board() const {
         string line(NQ, '.');
+        printf("--\n");
         for (int i = 0; i < NQ; ++i) {
             int Q = solver.board[i];
             line[Q] = 'Q';
