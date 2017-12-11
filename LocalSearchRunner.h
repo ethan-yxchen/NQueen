@@ -18,8 +18,10 @@ public:
 
     LocalSearchRunner(int NQ) : solver(NQ), NQ(NQ), steps(0), attempts(0) {}
     
-    void run(bool verbose=false) {
+    void run(int verbose=0) {
         auto start = chrono::system_clock::now();
+        solver.verbose = verbose;
+        verbose &= 2;
         
         solver.init();
         if (verbose)
@@ -27,15 +29,17 @@ public:
         solver.calculate_conflict();
         
         uint64_t limit = NQ * 1000;
-        for (; solver.conflicts && attempts < limit; attempts++) {
-            if (solver.random_step())
-                steps++;
+        while( solver.conflicts && solver.attempts < limit) {
+            steps += solver.random_step();
         }
         if (verbose)
             print_board();
         
+        steps = solver.steps;
+        attempts = solver.attempts;
         auto end = chrono::system_clock::now();
         elapse = end-start;
+        elapse *= 1000000;
     }
     
     bool verify_solution() const {

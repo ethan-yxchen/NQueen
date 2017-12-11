@@ -21,13 +21,17 @@ public:
     bool conflicts_dirty;
     int soft_threshold;
     int prob_plateau;
-        
+    int verbose;
+    uint64_t steps;
+    uint64_t attempts;
+
     NQueenSwapSolver(int N) : NQ(N), board(N),
         bin_diag(2*N), bin_anti_diag(2*N),
         seed(chrono::system_clock::now().time_since_epoch().count()),
         generator(seed), distribution(0, N - 1),
         conflicts(0), conflicts_dirty(true),
-        soft_threshold(0), prob_plateau(3) {
+        soft_threshold(0), prob_plateau(3),
+        steps(0), attempts(0) {
     }
 
     void init() {
@@ -46,11 +50,13 @@ public:
         }
     }
     
-    bool random_step() {
-        return random_step_soft();
+    int random_step() {
+        int delta = random_step_soft();
+        steps += delta;
+        return delta;
     }
 
-    bool random_step_soft() {
+    int random_step_soft() {
         if (conflicts_dirty) { calculate_conflict(); }
 
         int i = distribution(generator);
@@ -58,11 +64,12 @@ public:
         while (i == j)
             j = distribution(generator);
         
-        return swap_soft(i, j);
+        return swap_soft(i, j)? 1 : 0;
     }
     
     bool swap_soft(int col1, int col2) {
         int cost = diff(col1, col2);
+        attempts++;
         
         /**
          * soft margin: even if cost > 0, by a exponential probability,

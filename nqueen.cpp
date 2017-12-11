@@ -1,6 +1,10 @@
+#include <cassert>
+
 #include "NQueenSwapSolver.h"
 #include "LocalSearchRunner.h"
 #include "LocalSearchTester.h"
+#include "SmartSelectSwapSolver.h"
+#include "RandomGreedySolver.h"
 
 int main(int argc, const char *argv[]) {
     int arg = 1;
@@ -15,7 +19,7 @@ int main(int argc, const char *argv[]) {
     int verbose = (argc > arg)? stoi(string(argv[arg])) : 0;
     arg++;
 
-    LocalSearchTester<LocalSearchRunner<NQueenSwapSolver>> tester(N, repeat, 
+    LocalSearchTester<LocalSearchRunner<RandomGreedySolver>> tester(N, repeat, 
             soft_threshold, prob_plateau);
     
     tester.test(verbose);

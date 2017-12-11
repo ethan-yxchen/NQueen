@@ -58,7 +58,7 @@ public:
         printf("#fail: %d\n", f);
     }
     
-    void test(bool verbose=false) {
+    void test(int verbose=0) {
         for (int i=0; i<repeat; ++i) {
             LocalSearchRunner runner(NQ);
             runner.solver.soft_threshold = soft_threshold;
