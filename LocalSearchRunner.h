@@ -21,18 +21,19 @@ public:
     void run(int verbose=0) {
         auto start = chrono::system_clock::now();
         solver.verbose = verbose;
-        verbose &= 2;
         
         solver.init();
-        if (verbose)
-            printf("N=%d seed=%d\n", NQ, solver.seed), print_board();
+        if (verbose & 2)
+            printf("N=%d seed=%d\n", NQ, solver.seed);
+        if (verbose & 16)
+            print_board();
         solver.calculate_conflict();
         
         uint64_t limit = NQ * 1000;
         while( solver.conflicts && solver.attempts < limit) {
             steps += solver.random_step();
         }
-        if (verbose)
+        if (verbose & 16)
             print_board();
         
         steps = solver.steps;
