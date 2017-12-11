@@ -28,6 +28,7 @@ public:
     NQueenSwapSolver(int N) : NQ(N), board(N),
         bin_diag(2*N), bin_anti_diag(2*N),
         seed(chrono::system_clock::now().time_since_epoch().count()),
+        //seed(1971311498),
         generator(seed), distribution(0, N - 1),
         conflicts(0), conflicts_dirty(true),
         soft_threshold(0), prob_plateau(3),
@@ -70,7 +71,7 @@ public:
     bool swap_soft(int col1, int col2) {
         int cost = diff(col1, col2);
         attempts++;
-        
+
         /**
          * soft margin: even if cost > 0, by a exponential probability,
          * swap col1, col2

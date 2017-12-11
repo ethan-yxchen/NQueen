@@ -45,14 +45,9 @@ public:
                     break;
                 }
             }
-
-            Q = board[col1];
-            sum += update(Q + col1, bin_anti_diag, col1, resident_anti_diag);
-            sum += update(Q + NQ - col1, bin_diag, col1, resident_diag);
         }
 
-        for (int i = max(0, pool-100); i < pool; ++i) {
-            int col = tmp[i];
+        for (int col: tmp) {
             int Q = board[col];
             sum += update(Q + col, bin_anti_diag, col, resident_anti_diag);
             sum += update(Q + NQ - col, bin_diag, col, resident_diag);
