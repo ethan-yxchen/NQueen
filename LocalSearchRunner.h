@@ -18,7 +18,7 @@ public:
 
     LocalSearchRunner(int NQ) : solver(NQ), NQ(NQ), steps(0), attempts(0) {}
 
-    void run(int verbose=0) {
+    virtual void run(int verbose=0) {
         auto start = chrono::system_clock::now();
         solver.verbose = verbose;
 

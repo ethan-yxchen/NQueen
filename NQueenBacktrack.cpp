@@ -12,12 +12,44 @@ int NQueenBacktrack::isValid(const int &checkRow, const int &checkCol) {
     }
     return 1;
 }
-  
+
+bool NQueenBacktrack::placeQueen(int placeRow, int placeCol) {
+//    for (int col = 0; col < numOfQueen; ++col) {
+//        if (board[col] == INT_MIN) continue;
+//        int row = board[col];
+//        conflictSet[placeCol].insert(row);
+//    }           
+    numOfMRV = numOfQueen;
+    for (int row = 0; row < numOfQueen; ++row)
+        conflictSet[placeCol].insert(row);
+    for (int col = 0; col < numOfQueen; ++col) {
+        if (col == placeCol) continue;
+        for (int row = 0; row < numOfQueen; ++row) {
+            if (row == placeRow || abs(col - placeCol) == abs(row - placeRow))
+                conflictSet[col].insert(row);
+        }
+        // update the MRV column (minimum available spot)
+        int available = numOfQueen - conflictSet[col].size();
+        if (available < numOfMRV && available > 0) {
+            mrvCol = col;
+            numOfMRV = available;
+        }
+    }
+    if (numOfMRV == numOfQueen) // all col has 0 remaining value
+        return false;
+    else {
+        board[placeCol] = placeRow;
+        printf("Place queen at (%d, %d), ", placeRow, placeCol);
+        printf("MRV col is %d, MRV = %d\n", mrvCol, numOfMRV);
+        return true;
+    }
+}
+
 int NQueenBacktrack::getNumOfBk() {
     return numOfBk;
 }
 
-bool NQueenBacktrack::placeRecurOne(int currCol) {
+bool NQueenBacktrack::btRecursion(int currCol) {
     bool isSafe = false;
     if (currCol >= numOfQueen) {
         isSafe = true;
@@ -27,7 +59,7 @@ bool NQueenBacktrack::placeRecurOne(int currCol) {
         for (int sRow = 0; sRow < numOfQueen; ++sRow) {
             if (isValid(sRow, currCol)) {
                 board[currCol] = sRow;
-                isSafe = placeRecurOne(currCol+1);
+                isSafe = btRecursion(currCol+1);
                 if (isSafe) {
                     return true;
                 }
@@ -40,8 +72,8 @@ bool NQueenBacktrack::placeRecurOne(int currCol) {
     return isSafe;
 }
 
-void NQueenBacktrack::placeIter() {
-    int n = 0, row = 0, col = 0;
+void NQueenBacktrack::btIter() {
+    int row = 0, col = 0;
     while (col < numOfQueen) {
         while (row < numOfQueen) {
             if(isValid(row, col)) {
@@ -79,7 +111,13 @@ void NQueenBacktrack::placeIter() {
     }  
 }
 
-void NQueenBacktrack::placeFCMV() {
+void NQueenBacktrack::FCMRV() {
+    
+    placeQueen(1, 3);
+    placeQueen(0, 3);
+    
+    placeQueen(1, 2);
+    placeQueen(3, 2);
     
 }
 
