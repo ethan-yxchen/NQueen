@@ -18,11 +18,13 @@ int main(int argc, const char *argv[]) {
     arg++;
     int verbose = (argc > arg)? stoi(string(argv[arg])) : 0;
     arg++;
+    const char *out = (argc > arg)? argv[arg] : nullptr;
+    arg++;
 
     LocalSearchTester<LocalSearchRunner<RandomGreedySolver>> tester(N, repeat, 
             soft_threshold, prob_plateau);
     
-    tester.test(verbose);
+    tester.test(verbose, out);
     tester.stats();
     
     return true;

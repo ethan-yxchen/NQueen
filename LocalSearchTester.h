@@ -58,7 +58,7 @@ public:
         printf("#fail: %d\n", f);
     }
     
-    void test(int verbose=0) {
+    void test(int verbose=0, const char *fn=nullptr) {
         for (int i=0; i<repeat; ++i) {
             LocalSearchRunner runner(NQ);
             runner.solver.soft_threshold = soft_threshold;
@@ -70,6 +70,15 @@ public:
             conflicts.push_back(runner.solver.conflicts);
             if (verbose)
                 runner.stats();
+
+            if (repeat == 1 && fn != nullptr) {
+                FILE *fd = fopen(fn, "w");
+                fprintf(fd, "%d", runner.solver.board[0] + 1);
+                for (int i=1; i < NQ; ++i)
+                    fprintf(fd, " %d", runner.solver.board[i] + 1);
+                fprintf(fd, "\n");
+                fclose(fd);
+            }
         }
     }
 };
