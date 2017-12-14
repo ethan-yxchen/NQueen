@@ -1,6 +1,7 @@
 #include <cassert>
 
 #include "NQueenSwapSolver.h"
+#include "BacktrackRunner.h"
 #include "LocalSearchRunner.h"
 #include "LocalSearchTester.h"
 #include "SmartSelectSwapSolver.h"
@@ -18,14 +19,38 @@ int main(int argc, const char *argv[]) {
     arg++;
     int verbose = (argc > arg)? stoi(string(argv[arg])) : 0;
     arg++;
+    int solver =  (argc > arg)? stoi(string(argv[arg])) : 2;
+    arg++;
     const char *out = (argc > arg)? argv[arg] : nullptr;
     arg++;
 
-    LocalSearchTester<LocalSearchRunner<RandomGreedySolver>> tester(N, repeat, 
-            soft_threshold, prob_plateau);
-    
-    tester.test(verbose, out);
-    tester.stats();
-    
+    switch (solver) {
+        case 0: {
+            LocalSearchTester<LocalSearchRunner<NQueenSwapSolver>> tester1(N, repeat, soft_threshold, prob_plateau);
+            tester1.test(verbose, out);
+            tester1.stats();
+            break;
+        }
+        case 1: {
+            LocalSearchTester<LocalSearchRunner<SmartSelectSwapSolver>> tester2(N, repeat, soft_threshold, prob_plateau);
+            tester2.test(verbose, out);
+            tester2.stats();
+            break;
+        }
+        case 2: {
+            LocalSearchTester<LocalSearchRunner<RandomGreedySolver>> tester3(N, repeat, soft_threshold, prob_plateau);
+            tester3.test(verbose, out);
+            tester3.stats();
+            break;
+        }
+        case 3: {
+            BacktrackRunner runner;
+            runner.run_backtrack(N);
+            break;
+        }
+    }
+
+
+
     return true;
 }
