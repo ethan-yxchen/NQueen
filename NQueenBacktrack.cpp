@@ -80,6 +80,7 @@ bool NQueenBacktrack::fcMrvRecursion(int planCol) {
             return false;
         }
         for (int planRow = 0; planRow < numOfQueen; ++planRow) {
+            ++numOfNodes;
              // if planRow is marked as conflict
             if (conflictSet[planCol].find(planRow) != conflictSet[planCol].end())
                 continue;
