@@ -2,7 +2,6 @@
 #define NQUEENBACKTRACK_H
 
 #include <climits>
-#include <iostream>
 #include <random>
 #include <chrono>
 #include <vector>
@@ -31,9 +30,9 @@ private:
 public:
     long numOfBk;
     long numOfNodes;
-    NQueenBacktrack(int N): numOfQueen(N), board(N, INT_MIN), conflictSet(N), numOfBk(0), numOfNodes(0),
-                              seed(chrono::system_clock::now().time_since_epoch().count()),generator(seed)
-                              {
+    NQueenBacktrack(int N): numOfQueen(N), board(N, INT_MIN), conflictSet(N),
+                              seed(chrono::system_clock::now().time_since_epoch().count()),generator(seed),
+                              numOfBk(0), numOfNodes(0) {
         for (int col = 0; col < numOfQueen; ++col)
             unAssigned.insert(col);
     }

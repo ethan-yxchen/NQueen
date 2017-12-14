@@ -2,9 +2,9 @@
 
 #include "NQueenBacktrack.h"
 
-int NQueenBacktrack::isValid(const int &checkRow, const int &checkCol) { 
+int NQueenBacktrack::isValid(const int &checkRow, const int &checkCol) {
     for (int col = 0; col < checkCol; ++col) {
-        /*  
+        /*
          * 1. The queen on the column board[row] conflicts to the passed-in checkRow when board[row] == checkCol
          * 2. If one of the placed queen conflicts to new queen in diagonal,
          *    the difference between row index and column index of these two queens are the same
@@ -24,7 +24,7 @@ void NQueenBacktrack::updateConflict() {
         // col has no queen
         if (scanRow == INT_MIN) continue;
         // mark every spot that conflict with (board[scanCol], scanCol)
-        for (int col = 0; col < numOfQueen; ++col) {            
+        for (int col = 0; col < numOfQueen; ++col) {
             if (col == scanCol) {
                 for (int row = 0; row < numOfQueen; ++row)
                     conflictSet[col].insert(row);
@@ -44,14 +44,14 @@ bool NQueenBacktrack::fwdCheck() {
     for (auto col: unAssigned)
         if (conflictSet[col].size() == numOfQueen)
             return false;
-        else
-            return true;
+
+    return true;
 }
 
 // find MRV column (minimum available spot)
 int NQueenBacktrack::findMRVCol() {
-    int numOfMRV = numOfQueen, mrvCol;
-    for (int col = 0; col < numOfQueen; ++col) {        
+    int numOfMRV = numOfQueen, mrvCol = -1;
+    for (int col = 0; col < numOfQueen; ++col) {
         int available = numOfQueen - conflictSet[col].size();
         if (available < numOfMRV && available > 0) {
             mrvCol = col;
@@ -74,7 +74,7 @@ bool NQueenBacktrack::fcMrvRecursion(int planCol) {
         if (planCol < 0) {
             numOfBk++;
             return false;
-        }        
+        }
         if (!fwdCheck()) {
             numOfBk++;
             return false;
@@ -144,37 +144,37 @@ void NQueenBacktrack::btIter() {
                 row = board[col] + 1;
                 board[col] = INT_MIN;
                 continue;
-            }  
+            }
         }
         if (col == numOfQueen - 1)
             return;
         ++col;
-    }  
+    }
 }
 
 void NQueenBacktrack::fcMrv() {
     uniform_int_distribution<int> distribution(0, numOfQueen-1);
-    int startCol = distribution(generator);
+    // int startCol = distribution(generator);
     fcMrvRecursion(0);
 }
 
-void NQueenBacktrack::printASolution() {  
+void NQueenBacktrack::printASolution() {
     if (numOfQueen > 100) {
-        cout<<"Do not print the result with more than 100 Queens"<<endl;
+        printf("Do not print the result with more than 100 Queensn");
         return;
     }
     int row, col;
-    for (row = 0; row < numOfQueen; ++row) {  
-        for (col = 0; col < numOfQueen; ++col) {  
+    for (row = 0; row < numOfQueen; ++row) {
+        for (col = 0; col < numOfQueen; ++col) {
             // the board[row] doesn't match the traversed column, which means there's no queen here
-            if (board[row] != col) 
-                cout<<".";
+            if (board[row] != col)
+                printf(".");
             else
-                cout<<"Q";
+                printf("Q");
         }
-        cout<<endl;            
+        printf("\n");
     }
-    cout<<"-----------------------------------------------"<<endl;
+    printf("\n");
 }
 
 bool NQueenBacktrack::verify_conflict() {
