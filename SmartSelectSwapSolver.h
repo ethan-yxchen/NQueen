@@ -9,14 +9,14 @@ public:
     vector<int> resident_anti_diag;
     SmartSelectSwapSolver(int NQ) : NQueenSwapSolver(NQ),
         is_unsolve(NQ), resident_diag(NQ*2), resident_anti_diag(NQ*2) {}
-    
+
     void add_unsolve(int col) {
         //printf("add_unsolve %d  (%s)\n", col, is_unsolve[col]? "yes" : "no");
         if (is_unsolve[col]) { return; }
         is_unsolve[col] = true;
         unsolved_list.push_back(col);
     }
-    
+
     int update(int diag, vector<int> &bin, int col, vector<int> &resident) {
         int bincount = bin[diag]++;
         if (bincount) {
@@ -34,7 +34,7 @@ public:
         unsolved_list.clear();
         for (int i = 0, e = NQ*2; i < e; ++i)
             bin_diag[i] = bin_anti_diag[i] = 0;
-        
+
         for (int col = 0, e = NQ; col < e; ++col) {
             is_unsolve[col] = false;
             int Q = board[col];
@@ -42,7 +42,7 @@ public:
             sum += update(Q + col, bin_anti_diag, col, resident_anti_diag);
             sum += update(Q + NQ - col, bin_diag, col, resident_diag);
         }
-                
+
         conflicts = sum;
         conflicts_dirty = false;
 
@@ -87,7 +87,7 @@ public:
         int i = candidate.back();
         candidate.pop_back();
         int j;
-        
+
         int n = candidate.size();
         if (n <= 5) {
             j = distribution(generator);

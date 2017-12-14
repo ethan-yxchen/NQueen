@@ -34,9 +34,10 @@ public:
             uniform_int_distribution<int> dist(i+1, pool);
             int col1 = tmp[i], Q;
 
-            for (int attempts = 0; attempts < 30; ++attempts) {     // like init_magic // random greedy
+            for (int greedy_attempts = 0; greedy_attempts < 30; ++greedy_attempts) {     // like init_magic // random greedy
                 int j = dist(generator);
                 int col2 = tmp[j];
+                attempts++;
                 Q = board[col2];
                 if (bin_anti_diag[Q + col1] + bin_diag[Q + NQ - col1] == 0) {
                     board[col2] = board[col1];
@@ -52,6 +53,7 @@ public:
         }
 
         for (int i = max(0, pool-100); i <= pool; ++i) {
+            attempts++;
             int col = tmp[i];
             int Q = board[col];
             sum += update(Q + col, bin_anti_diag, col, resident_anti_diag);
@@ -64,7 +66,6 @@ public:
         }
 
         conflicts += sum;
-        attempts += pool;
 
         return step;
     }

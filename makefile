@@ -1,4 +1,4 @@
-CC=gcc
+CC=g++
 CFLAGS=-Wall --std=c++11 -msse4.2 -lstdc++ -lm -O3 -I.
 
 nqueen: *.cpp *.h
