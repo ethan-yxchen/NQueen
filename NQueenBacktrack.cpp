@@ -1,3 +1,5 @@
+#include <future>
+
 #include "NQueenBacktrack.h"
 
 int NQueenBacktrack::isValid(const int &checkRow, const int &checkCol) { 
@@ -13,22 +15,40 @@ int NQueenBacktrack::isValid(const int &checkRow, const int &checkCol) {
     return 1;
 }
 
-bool NQueenBacktrack::placeQueen(int placeRow, int placeCol) {
-//    for (int col = 0; col < numOfQueen; ++col) {
-//        if (board[col] == INT_MIN) continue;
-//        int row = board[col];
-//        conflictSet[placeCol].insert(row);
-//    }           
-    numOfMRV = numOfQueen;
-    for (int row = 0; row < numOfQueen; ++row)
-        conflictSet[placeCol].insert(row);
-    for (int col = 0; col < numOfQueen; ++col) {
-        if (col == placeCol) continue;
-        for (int row = 0; row < numOfQueen; ++row) {
-            if (row == placeRow || abs(col - placeCol) == abs(row - placeRow))
-                conflictSet[col].insert(row);
+void NQueenBacktrack::updateConflict() {
+    for (int scanCol = 0; scanCol < numOfQueen; ++scanCol) {
+        int scanRow = board[scanCol];
+        // col has no queen yet
+        if (scanRow == INT_MIN) continue;
+        // mark every spot that conflict with (board[col], col)
+        for (int col = 0; col < numOfQueen; ++col) {            
+            if (col == scanCol) {
+                for (int row = 0; row < numOfQueen; ++row)
+                    conflictSet[col].insert(row);
+            }
+            else {
+                for (int row = 0; row < numOfQueen; ++row)
+                    if (row == scanRow || abs(col - scanCol) == abs(row - scanRow))
+                        conflictSet[col].insert(row);
+            }
         }
-        // update the MRV column (minimum available spot)
+    }
+}
+
+bool NQueenBacktrack::fwdCheck() {
+    if (unAssigned.size() == 0)
+        return false;
+    for (auto col: unAssigned)
+        if (conflictSet[col].size() == numOfQueen)
+            return false;
+        else
+            return true;
+}
+
+// find MRV column (minimum available spot)
+int NQueenBacktrack::findMRVCol() {
+    int numOfMRV = numOfQueen, mrvCol;
+    for (int col = 0; col < numOfQueen; ++col) {        
         int available = numOfQueen - conflictSet[col].size();
         if (available < numOfMRV && available > 0) {
             mrvCol = col;
@@ -36,13 +56,39 @@ bool NQueenBacktrack::placeQueen(int placeRow, int placeCol) {
         }
     }
     if (numOfMRV == numOfQueen) // all col has 0 remaining value
-        return false;
-    else {
-        board[placeCol] = placeRow;
-        printf("Place queen at (%d, %d), ", placeRow, placeCol);
-        printf("MRV col is %d, MRV = %d\n", mrvCol, numOfMRV);
-        return true;
+        mrvCol = -1;
+//    printf ("mrvCol = %d, mrv = %d\n", mrvCol, numOfMRV);
+    return mrvCol;
+}
+
+bool NQueenBacktrack::fcMrvRecursion(int planCol) {
+    bool isSafe = false;
+    if (this->unAssigned.empty()) {
+        isSafe = true;
     }
+    else {
+        // still have unAssigned but all spot are invalid
+        if (planCol < 0) {
+            numOfBk++;
+            return false;
+        }            
+        for (int planRow = 0; planRow < numOfQueen; ++planRow) {
+             // if planRow is marked as conflict
+            if (conflictSet[planCol].find(planRow) != conflictSet[planCol].end())
+                continue;
+            placeQueen(planRow, planCol);
+            if (!fwdCheck())
+                break;  // return false, backtrack
+            int nextCol = findMRVCol();
+            isSafe = btRecursion(nextCol);
+            if (isSafe)
+                return true;
+            else
+                removeQueen(planRow, planCol);
+        }
+        numOfBk++;
+    }
+    return isSafe;
 }
 
 int NQueenBacktrack::getNumOfBk() {
@@ -73,12 +119,13 @@ bool NQueenBacktrack::btRecursion(int currCol) {
 }
 
 void NQueenBacktrack::btIter() {
+    numOfBk = 0;
     int row = 0, col = 0;
     while (col < numOfQueen) {
         while (row < numOfQueen) {
             if(isValid(row, col)) {
                 board[col] = row;
-                // reset the col for backtracking or searching valid spot in next row
+                // reset the col for backtracking or searching valid spot in next col
                 row = 0;
                 break;  
             }  
@@ -89,8 +136,7 @@ void NQueenBacktrack::btIter() {
         if(board[col] == INT_MIN) {
             // no way to backtrack, no solution found (impossible in N queens problem, but in case)
             if (col == 0)
-                break;  
-            // backtrack
+                break;
             else {
                 numOfBk++;
                 --col;
@@ -111,14 +157,10 @@ void NQueenBacktrack::btIter() {
     }  
 }
 
-void NQueenBacktrack::FCMRV() {
-    
-    placeQueen(1, 3);
-    placeQueen(0, 3);
-    
-    placeQueen(1, 2);
-    placeQueen(3, 2);
-    
+void NQueenBacktrack::fcMrv() {
+    uniform_int_distribution<int> distribution(0, numOfQueen-1);
+    int startCol = distribution(generator);
+    fcMrvRecursion(startCol);
 }
 
 void NQueenBacktrack::printASolution() {  
@@ -140,4 +182,12 @@ void NQueenBacktrack::printASolution() {
         cout<<endl;            
     }
     cout<<"-----------------------------------------------"<<endl;
+}
+
+bool NQueenBacktrack::verify_conflict() {
+    for (int i = 0; i < numOfQueen; ++i) {
+        if (isValid(board[i], i) == 0)
+            return false;
+    }
+    return true;
 }
